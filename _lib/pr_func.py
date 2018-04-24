@@ -5,7 +5,6 @@
 # Sebastian Gottwald <sebastian.gottwald@uni-ulm.de> 2018
 
 import numpy as np
-#from collections import OrderedDict
 
 global dims
 
@@ -92,7 +91,7 @@ class func(object):
         if type(other)==int or type(other)==float:
             return func(val=other*self.val,vars=self.vars,r=self.r,parse_name=False)
 
-    def __truediv__(self,other):
+    def __div__(self,other):
         if type(other)==int or type(other)==float:
             return func(val=self.val/float(other),vars=self.vars,r=self.r,parse_name=False)
         else:
