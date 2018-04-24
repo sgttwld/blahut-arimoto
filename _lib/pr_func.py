@@ -5,19 +5,19 @@
 # Sebastian Gottwald <sebastian.gottwald@uni-ulm.de> 2018
 
 import numpy as np
-from collections import OrderedDict
+#from collections import OrderedDict
 
 global dims
 
 def set_dims(d=[]):
     global dims
-    dims = OrderedDict(d)
+    dims = d
 
 def get_r(variables,dims):
     r = []
     for i in range(0,len(dims)):
         for item in variables:
-            if dims.items()[i][0] == item:
+            if dims[i][0] == item:
                 r.append(i)
     return r
 
@@ -47,7 +47,7 @@ class func(object):
         elif parse_name:
             self.vars = self.parse_name(name)
         elif len(r)>0:
-            self.vars = [dims.items()[ind][0] for ind in r]
+            self.vars = [dims[ind][0] for ind in r]
         else:
             self.vars = []
         # set r:
@@ -56,7 +56,7 @@ class func(object):
         else:
             self.r = get_r(self.vars,dims)
         # set dims:
-        self.dims = [dims.items()[ind][1] for ind in self.r]
+        self.dims = [dims[ind][1] for ind in self.r]
         # set val:
         if type(val) == str:
             if val == 'rnd':
@@ -117,7 +117,7 @@ class func(object):
         else:
             vars = list(set(self.vars+other.vars))
             r = sorted(list(set(self.r+other.r)))
-            I = np.ones([dims.items()[ind][1] for ind in r])
+            I = np.ones([dims[ind][1] for ind in r])
             s0 = np.einsum(I,r,self.val,self.r,r)
             s1 = np.einsum(I,r,other.val,other.r,r)
             return func(val=s0+s1,vars=vars,r=r,parse_name=False)
