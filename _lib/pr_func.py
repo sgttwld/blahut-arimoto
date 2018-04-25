@@ -30,6 +30,8 @@ def log(fnc):
     return func(val=np.log(fnc.val+1e-55), r=fnc.r, parse_name=False)
 
 def sum(fnc,over=[]):
+    if len(over) == 0:
+        over = fnc.vars
     r_over = get_r(over,dims)
     r = [item for item in fnc.r if not(item in r_over)]
     val = np.einsum(fnc.val,fnc.r,r)
@@ -127,6 +129,9 @@ class func(object):
 
     def __sub__(self,other):
         return self+(-other)
+
+    def __rsub__(self,other):
+        return other+(-self)
 
     def normalize(self,vrs=[]):
         if len(vrs) == 0:
