@@ -2,7 +2,7 @@
 # pr_func.py
 # implementation of a 'function' container class containing a numpy
 # array and knowledge about its dependent variables.
-# Sebastian Gottwald <sebastian.gottwald@uni-ulm.de> 2018
+# 2018 Sebastian Gottwald <sebastian.gottwald@uni-ulm.de>
 
 import numpy as np
 
@@ -29,13 +29,28 @@ def exp_tr(fnc):
 def log(fnc):
     return func(val=np.log(fnc.val+1e-55), r=fnc.r, parse_name=False)
 
-def sum(fnc,over=[]):
-    if len(over) == 0:
-        over = fnc.vars
-    r_over = get_r(over,dims)
-    r = [item for item in fnc.r if not(item in r_over)]
-    val = np.einsum(fnc.val,fnc.r,r)
-    return func(val=val,r=r,parse_name=False)
+def sum(*args):
+    """
+    sum over a func object, args can consist of one or two arguments;
+    if only one argument is given, the sum is over all variables;
+    if two args are given: args = [vars,func_obj] or args = [func_obj, vars],
+    where vars is a list of variable strings, i.e. vars = ['x','w',...]
+    * if args[0] = vars, then vars specifies the variables to sum over
+    * if args[1] = vars, then vars specifies the variables of the result
+    """
+    if len(args) == 1:
+        r_target = []
+        val = np.einsum(args[0].val,args[0].r,r_target)
+    else:
+        if type(args[0]) == list:
+            r_over = get_r(args[0],dims)
+            r_target = [item for item in args[1].r if not(item in r_over)]
+            val = np.einsum(args[1].val,args[1].r,r_target)
+        elif type(args[1]) == list:
+            r_target = get_r(args[1],dims)
+            val = np.einsum(args[0].val,args[0].r,r_target)
+
+    return func(val=val,r=r_target,parse_name=False)
 
 
 class func(object):
