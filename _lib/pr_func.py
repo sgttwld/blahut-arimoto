@@ -96,7 +96,7 @@ class func(object):
         return self.get_name()
 
     def __mul__(self,other):
-        if type(other)==int or type(other)==float:
+        if isinstance(other, (int,float)):
             return func(val=other*self.val,vars=self.vars,r=self.r,parse_name=False)
         else:
             vars = list(set(self.vars + other.vars))
@@ -105,11 +105,11 @@ class func(object):
             return func(val=result,vars=vars,r=r,parse_name=False)
 
     def __rmul__(self,other):
-        if type(other)==int or type(other)==float:
+        if isinstance(other, (int,float)):
             return func(val=other*self.val,vars=self.vars,r=self.r,parse_name=False)
 
     def __div__(self,other):
-        if type(other)==int or type(other)==float:
+        if isinstance(other, (int,float)):
             return func(val=self.val/float(other),vars=self.vars,r=self.r,parse_name=False)
         else:
             r = sorted(list(set(self.r+other.r)))
@@ -118,7 +118,7 @@ class func(object):
             return func(val=result,vars=vars,r=r,parse_name=False)
 
     def __rdiv__(self,other):
-        if type(other)==int or type(other)==float:
+        if isinstance(other, (int,float)):
             return func(val=float(other)/self.val,vars=self.vars,r=self.r,parse_name=False)
 
     def __pos__(self):
@@ -128,7 +128,7 @@ class func(object):
         return (-1)*self
 
     def __add__(self,other):
-        if type(other)==int or type(other)==float:
+        if isinstance(other, (int,float)):
             return func(val=self.val+other,vars=self.vars,r=self.r,parse_name=False)
         else:
             vars = list(set(self.vars+other.vars))
@@ -139,7 +139,7 @@ class func(object):
             return func(val=s0+s1,vars=vars,r=r,parse_name=False)
 
     def __radd__(self,other):
-        if type(other)==int or type(other)==float:
+        if isinstance(other, (int,float)):
             return func(val=self.val+other,vars=self.vars,r=self.r,parse_name=False)
 
     def __sub__(self,other):
