@@ -148,6 +148,15 @@ class func(object):
     def __rsub__(self,other):
         return other+(-self)
 
+    def __pow__(self,y):
+        return func(val=self.val**y,vars=self.vars,r=self.r,parse_name=False)
+
+    # for python3:
+    def __truediv__(self,other):
+        return self.__div__(other)
+    def __rtruediv__(self,other):
+        return self.__rdiv__(other)
+
     def normalize(self,vrs=[]):
         if len(vrs) == 0:
             vrs = self.vars
@@ -156,3 +165,13 @@ class func(object):
         Z = np.einsum(self.val,self.r,r_Z)
         self.val = np.einsum(self.val,self.r,1.0/(Z+1e-55),r_Z,self.r)
         return self
+
+    def eval(self,variable,value):
+        vars = [var for var in self.vars if not(var==variable)]
+        r_var = get_r([variable],dims)[0]
+        r_new = [r for r in self.r if not(r==r_var)]
+        t = [slice(0,dims[ind][1]) for ind in range(0,len(dims))]
+        t[r_var] = value
+        t = [t[ind] for ind in self.r]
+        t = tuple(t)
+        return func(val=self.val[t],vars=vars,r=r_new,parse_name=False)
